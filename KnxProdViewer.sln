@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnxProdViewer", "KnxProdViewer.csproj", "{61DCF96D-BFEA-440F-A3A9-1E150BE3B89D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kaenx.DataContext", "..\Kaenx.DataContext\Kaenx.DataContext.csproj", "{3876A52E-5E9E-4A87-B256-29D0FAAC46D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61DCF96D-BFEA-440F-A3A9-1E150BE3B89D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61DCF96D-BFEA-440F-A3A9-1E150BE3B89D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61DCF96D-BFEA-440F-A3A9-1E150BE3B89D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61DCF96D-BFEA-440F-A3A9-1E150BE3B89D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3876A52E-5E9E-4A87-B256-29D0FAAC46D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3876A52E-5E9E-4A87-B256-29D0FAAC46D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3876A52E-5E9E-4A87-B256-29D0FAAC46D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3876A52E-5E9E-4A87-B256-29D0FAAC46D7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {09444073-7F81-4A9B-AB6B-65DF3C9FD9D4}
+	EndGlobalSection
+EndGlobal
