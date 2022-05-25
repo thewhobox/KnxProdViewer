@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Kaenx.DataContext\Kaenx.DataContext.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource  Include="Assets\arrow_up.png" />
+  </ItemGroup>
+
 </Project>

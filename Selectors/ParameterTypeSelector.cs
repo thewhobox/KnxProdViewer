@@ -42,25 +42,25 @@ namespace KnxProdViewer.Selectors
                     return TextRead;
 
                 case ParamText pte:
-                    //return Text;
+                    return Text;
 
                 case ParamCheckBox pch:
-                    //return CheckBox;
+                    return CheckBox;
 
                 case ParamColor pco:
-                    //return Color;
+                    return Color;
 
                 case ParamSeperator pse:
-                    //return Seperator;
+                    return Seperator;
 
                 case ParamSeperatorBox psex:
-                    //return SeperatorBox;
+                    return SeperatorBox;
 
                 case ParamTime pti:
-                    //return Time;
+                    return Time;
 
                 case ParameterTable ptable:
-                    //return Table;
+                    return NotFound;
 
                 case ParamNone pnon:
                     return None;

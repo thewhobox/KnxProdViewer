@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -26,20 +27,21 @@ namespace KnxProdViewer
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class ImportDialog : Window
+    public partial class ImportDialog : Window, INotifyPropertyChanged
     {
-        public IManager Manager { get; set; } 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private IManager _manager;
+        public IManager Manager {
+            get { return _manager; }
+            set { _manager = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Manager")); }
+        }
         public ObservableCollection<ImportDevice> Devices { get; set; } = new ObservableCollection<ImportDevice>();
 
         public ImportDialog()
         {
             InitializeComponent();
             this.DataContext = this;
-            
-
-            this.TaskbarItemInfo = new TaskbarItemInfo();
-            this.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
-            this.TaskbarItemInfo.ProgressValue = 0.3;
         }
 
         private void DoSelectFile(object sender, RoutedEventArgs e)
@@ -62,19 +64,24 @@ namespace KnxProdViewer
                 MessageBox.Show("Einige der Applikationen existieren bereits in der Datenbank");
         }
 
-        private void DoImport(object sender, RoutedEventArgs e)
+        private async void DoImport(object sender, RoutedEventArgs e)
         {
+            TaskbarInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal;
+
             CatalogContext context = new CatalogContext();
             context.Database.Migrate();
             List<ImportDevice> toImport = new List<ImportDevice>();
             foreach(object x in DeviceList.SelectedItems)
                 toImport.Add(x as ImportDevice);
             try{
-                Manager.StartImport(toImport, context);
+                await System.Threading.Tasks.Task.Run(async () => {
+                    Manager.StartImport(toImport, context);
+                });
             } catch(Exception ex)
             {
 
             }
+            Debug.WriteLine("Fertig");
         }
     }
 }

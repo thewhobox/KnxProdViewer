@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:KnxProdViewer"
         mc:Ignorable="d"
         Title="Importieren" Height="450" Width="800">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="TaskbarInfo" Description="An app with a taskbar info description" ProgressValue="{Binding Manager.ProgressValue}" />
+    </Window.TaskbarItemInfo>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -15,9 +18,11 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
+        <ProgressBar Value="{Binding Manager.ProgressValue}" Maximum="1" />
+
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="{Binding Manager.CurrentDevice, FallbackValue=Es wird gerade nix importiert}" />
-            <TextBlock Text="{Binding Manager.CurrentAction}" />
+            <TextBlock Text="{Binding Manager.CurrentState}" />
         </StackPanel>
         
 

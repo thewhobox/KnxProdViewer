@@ -15,7 +15,7 @@
 
         <DataTemplate x:Key="ChannelTemplate">
             <Expander Header="{Binding Text}" BorderThickness="0 1" Visibility="{Binding IsVisible, Converter={StaticResource Bool2Vis}}" HorizontalContentAlignment="Stretch">
-                <ListView ItemsSource="{Binding Blocks}" SelectedItem="{Binding SelectedBlock, ElementName=ParaControl, Mode=TwoWay}" HorizontalAlignment="Stretch" >
+                <ListView ItemsSource="{Binding Blocks}" SelectedItem="{Binding SelectedBlock, ElementName=ParaControl, Mode=TwoWay}" SelectedValue="{Binding SelectedBlockId, ElementName=ParaControl, Mode=TwoWay}" SelectedValuePath="Id" HorizontalAlignment="Stretch" >
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -35,7 +35,7 @@
             </Expander>
         </DataTemplate>
         <DataTemplate x:Key="IndependentTemplate">
-            <ListView ItemsSource="{Binding Blocks}" SelectedItem="{Binding SelectedBlock, ElementName=ParaControl, Mode=TwoWay}">
+            <ListView ItemsSource="{Binding Blocks}" SelectedItem="{Binding SelectedBlock, ElementName=ParaControl, Mode=TwoWay}" SelectedValue="{Binding SelectedBlockId, ElementName=ParaControl, Mode=TwoWay}" SelectedValuePath="Id">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -126,6 +126,19 @@
                 <TextBlock Grid.Column="2" Text="{Binding SuffixText}" Margin="10 0" VerticalAlignment="Center" HorizontalAlignment="Left" />
             </Grid>
         </DataTemplate>
+
+        <DataTemplate x:Key="TypeText">
+            <Grid Visibility="{Binding IsVisible, Converter={StaticResource Bool2Vis}}" Margin="0 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MaxWidth="550" Width="9*" />
+                    <ColumnDefinition MinWidth="230" MaxWidth="350" Width="3*" />
+                    <ColumnDefinition MaxWidth="120" Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Text}" Margin="10 0" VerticalAlignment="Center" TextWrapping="Wrap" />
+                <TextBox Grid.Column="1" IsEnabled="{Binding IsEnabled}" MaxLength="{Binding MaxLength}" Text="{Binding Value, Mode=TwoWay}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2" Text="{Binding SuffixText}" Margin="10 0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            </Grid>
+        </DataTemplate>
 		
         <DataTemplate x:Key="TypeNone">
             <Grid Visibility="{Binding IsVisible, Converter={StaticResource Bool2Vis}}" Margin="0 5">
@@ -141,12 +154,13 @@
                                               EnumsTwo="{StaticResource TypeEnumsTwo}"
                                               Number="{StaticResource TypeNumber}"
                                               TextRead="{StaticResource TypeTextRead}"
+                                              Text="{StaticResource TypeText}"
                                               />
 	</UserControl.Resources>
 
 	<Grid Grid.Row="2">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="auto" MinWidth="80" MaxWidth="250" />
+			<ColumnDefinition Width="auto" MinWidth="80" MaxWidth="300" />
 			<ColumnDefinition />
 			<ColumnDefinition MaxWidth="400" />
 		</Grid.ColumnDefinitions>
@@ -164,9 +178,9 @@
         <DataGrid Grid.Column="2" ItemsSource="{Binding ComObjects}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
             <DataGrid.Columns>
 
-				<DataGridTextColumn Header="Name" Binding="{Binding Number}" />
+				<DataGridTextColumn Header="Number" Binding="{Binding Number}" />
 				<DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-				<DataGridTextColumn Header="Name" Binding="{Binding Function}" />
+				<DataGridTextColumn Header="Function" Binding="{Binding Function}" />
 
 			</DataGrid.Columns>
         </DataGrid>

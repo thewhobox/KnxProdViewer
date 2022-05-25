@@ -58,10 +58,60 @@ namespace KnxProdViewer
         private void DoDelete(object sender, RoutedEventArgs e)
         {
             //ApplicationViewModel model = App
-            using(CatalogContext context = new CatalogContext())
+            using(CatalogContext _context = new CatalogContext())
             {
-                //AppList.ItemsSource = context.Devices.ToList();
+                DeviceModel device = DeviceList.SelectedItem as DeviceModel;
+
+                foreach(ApplicationViewModel app in device.Applications)
+                {
+                    DeleteApplication(app, _context);
+                }
+
+                _context.SaveChanges();
+
+                foreach(Hardware2AppModel hard in _context.Hardware2App.ToList())
+                {
+                    if(!_context.Applications.Any(a => a.HardwareId == hard.Id))
+                    {
+                        _context.Hardware2App.Remove(hard);
+                        IEnumerable<object> tempList = _context.Devices.Where(d => d.HardwareId == hard.Id);
+                        _context.RemoveRange(tempList);
+                    }
+                }
+
+                _context.SaveChanges();
             }
+        }
+
+        private void DeleteApplication(ApplicationViewModel app, CatalogContext _context)
+        {
+            IEnumerable<object> tempList = _context.AppSegments.Where(a => a.ApplicationId == app.Id);
+            _context.RemoveRange(tempList);
+
+            tempList = _context.AppComObjects.Where(a => a.ApplicationId == app.Id);
+            _context.RemoveRange(tempList);
+
+            tempList = _context.AppAdditionals.Where(a => a.ApplicationId == app.Id);
+            _context.RemoveRange(tempList);
+
+            tempList = _context.AppParameters.Where(a => a.ApplicationId == app.Id);
+            _context.RemoveRange(tempList);
+
+            //Check database so everything deletes
+
+            List<AppParameterTypeViewModel> toDelete = new List<AppParameterTypeViewModel>();
+            tempList = _context.AppParameterTypes.Where(p => p.ApplicationId == app.Id);
+            foreach (AppParameterTypeViewModel pType in tempList)
+            {
+                if (pType.Type == ParamTypes.Enum)
+                {
+                    IEnumerable<AppParameterTypeEnumViewModel> tempList2 = _context.AppParameterTypeEnums.Where(e => e.TypeId == pType.Id);
+                    _context.AppParameterTypeEnums.RemoveRange(tempList2);
+                }
+                toDelete.Add(pType);
+            }
+            _context.AppParameterTypes.RemoveRange(toDelete);
+            _context.Applications.Remove(app);
         }
         
         private void DoLoad(object sender, RoutedEventArgs e)
