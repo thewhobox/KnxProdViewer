@@ -57,6 +57,11 @@ namespace KnxProdViewer
         
         private void DoDelete(object sender, RoutedEventArgs e)
         {
+            if(DeviceList.SelectedItem == null)
+            {
+                MessageBox.Show("Bitte wählen Sie zuerst ein Gerät aus");
+                return;
+            }
             //ApplicationViewModel model = App
             using(CatalogContext _context = new CatalogContext())
             {

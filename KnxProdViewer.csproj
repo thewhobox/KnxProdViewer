@@ -9,17 +9,20 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
   </PropertyGroup>
 
+  <ItemGroup>
+    <Resource Include="Assets\arrow_up.png" />
+	<Resource Include="Assets\arrow_down.png" />
+	<Resource Include="Assets\error.png" />
+	<Resource Include="Assets\information.png" />
+  </ItemGroup>
+
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kaenx.DataContext\Kaenx.DataContext.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource  Include="Assets\arrow_up.png" />
+	  <ProjectReference Include="..\Kaenx.DataContext\Kaenx.DataContext.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,6 +12,10 @@
 
     <UserControl.Resources>
         <conv:BoolToVisibility x:Key="Bool2Vis" />
+        <conv:IsHeadlineToObject x:Key="HeadlineToSize" TrueValue="14" FalseValue="12" />
+        <conv:IsHeadlineToObject x:Key="HeadlineToWeight" TrueValue="Bold" FalseValue="Normal" />
+        <conv:SeparatorHintToObject x:Key="HintToIcon" InformationValue="/Assets/information.png" ErrorValue="/Assets/error.png" />
+        <conv:SeparatorHintToObject x:Key="HintToBrush" InformationValue="Aquamarine" ErrorValue="Red" />
 
         <DataTemplate x:Key="ChannelTemplate">
             <Expander Header="{Binding Text}" BorderThickness="0 1" Visibility="{Binding IsVisible, Converter={StaticResource Bool2Vis}}" HorizontalContentAlignment="Stretch">
@@ -145,8 +149,43 @@
                 <TextBlock Text="{Binding Text}" Foreground="Gray" Margin="10 0" VerticalAlignment="Center" TextWrapping="Wrap" />
             </Grid>
         </DataTemplate>
+        
+        <DataTemplate x:Key="TypeSeparator">
+            <Grid Visibility="{Binding IsVisible, Converter={StaticResource Bool2Vis}}" Margin="0 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MaxWidth="550" Width="9*" />
+                    <ColumnDefinition MinWidth="230" MaxWidth="350" Width="3*" />
+                    <ColumnDefinition MaxWidth="120" Width="1*" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
-		<selectors:ChannelSelector x:Key="ChannelSelector" Channel="{StaticResource ChannelTemplate}" Independent="{StaticResource IndependentTemplate}" />
+                <Border Grid.ColumnSpan="4" Margin="10 5" BorderBrush="Gray" BorderThickness="0 1 0 0" Visibility="{Binding IsLineVisible, Converter={StaticResource Bool2Vis}}" />
+                <!--Visibility="{Binding Text, Converter={StaticResource ConvertStringVisible}}"-->
+                <TextBlock Grid.ColumnSpan="2" Text="{Binding Text}" FontSize="{Binding Hint, Converter={StaticResource HeadlineToSize}}" FontWeight="{Binding Hint, Converter={StaticResource HeadlineToWeight}}" Margin="10 0" VerticalAlignment="Center" TextWrapping="Wrap" />
+            </Grid>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="TypeSeparatorBox">
+            <!--BorderBrush="{Binding IsError, Converter={StaticResource BoolToBrush}}"
+            {Binding IsError, Converter={StaticResource BoolToBrush}}-->
+            <Border Visibility="{Binding IsVisible, Converter={StaticResource Bool2Vis}}" Margin="10 5" Padding="10" BorderThickness="1" BorderBrush="{Binding Hint, Converter={StaticResource HintToBrush}}" >
+                <Border.Background>
+                    <SolidColorBrush Color="{Binding Hint, Converter={StaticResource HintToBrush}}" Opacity="0.2" />
+                </Border.Background>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!--<FontIcon FontFamily="Segoe MDL2 Assets" Glyph="{Binding IsError, Converter={StaticResource ConvertBoolToIcon}}" />-->
+                    <Image Height="20" Source="{Binding Hint, Converter={StaticResource HintToIcon}}" />
+                    <TextBlock Grid.Column="1" Text="{Binding Text}" Margin="10 3 0 3" VerticalAlignment="Center" TextWrapping="Wrap" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+        
+        <selectors:ChannelSelector x:Key="ChannelSelector" Channel="{StaticResource ChannelTemplate}" Independent="{StaticResource IndependentTemplate}" />
         <selectors:ParameterTypeSelector x:Key="ParaTypeSelector" 
                                               NotFound="{StaticResource TypeNotFound}"
                                               None="{StaticResource TypeNone}"
@@ -155,6 +194,8 @@
                                               Number="{StaticResource TypeNumber}"
                                               TextRead="{StaticResource TypeTextRead}"
                                               Text="{StaticResource TypeText}"
+                                              Seperator="{StaticResource TypeSeparator}"
+                                              SeperatorBox="{StaticResource TypeSeparatorBox}"
                                               />
 	</UserControl.Resources>
 
