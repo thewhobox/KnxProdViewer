@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using Kaenx.DataContext.Catalog;
 using Kaenx.DataContext.Import;
 using Kaenx.DataContext.Import.Dynamic;
+using Kaenx.DataContext.Import.Values;
 using KnxProdViewer.Models;
 
 namespace KnxProdViewer
@@ -33,7 +34,7 @@ namespace KnxProdViewer
         public event PropertyChangedEventHandler PropertyChanged;
 
         private ApplicationViewModel _app;
-        private Dictionary<int, string> values = new Dictionary<int, string>();
+        private Dictionary<int, IValues> values = new Dictionary<int, IValues>();
         private List<IDynParameter> Parameters = new List<IDynParameter>();
         private List<ParamBinding> Bindings = new List<ParamBinding>();
         private List<ComBinding> _comBindings;
@@ -131,13 +132,13 @@ namespace KnxProdViewer
                 }
             }
 
-            using(CatalogContext co = new CatalogContext())
+            /*using(CatalogContext co = new CatalogContext())
             {
                 foreach (AppParameter para in co.AppParameters.Where(p => p.ApplicationId == adds.ApplicationId))
                 {
                     values.Add(para.ParameterId, para.Value);
                 }
-            }
+            }*/
 
             foreach(IDynChannel ch in Channels)
             {
@@ -147,6 +148,11 @@ namespace KnxProdViewer
                     {
                         para.PropertyChanged += Para_PropertyChanged;
                         Parameters.Add(para);
+
+                        if(!values.ContainsKey(para.Id))
+                            values.Add(para.Id, new ParameterValues());
+
+                        ((ParameterValues)values[para.Id]).Parameters.Add(para);
                     }
                 }
             }
@@ -161,12 +167,12 @@ namespace KnxProdViewer
 
             IDynParameter para = sender as IDynParameter;
 
-            string oldValue = values[para.Id];
+            /*string oldValue = values[para.Id].Value;
             if(para.Value == oldValue)
             {
                 System.Diagnostics.Debug.WriteLine("Wert unverändert! " + para.Id + " -> " + para.Value);
                 return;
-            }
+            }*/
             System.Diagnostics.Debug.WriteLine("Wert geändert! " + para.Id + " -> " + para.Value);
 
             IEnumerable<ParamBinding> list = Bindings.Where(b => b.SourceId == para.Id);
@@ -212,7 +218,7 @@ namespace KnxProdViewer
             List<ParameterBlock> list2 = new List<ParameterBlock>();
             List<int> list5 = new List<int>();
 
-            values[para.Id] = para.Value;
+            //values[para.Id] = para.Value;
 
             foreach (IDynChannel ch in Channels)
             {
@@ -309,7 +315,8 @@ namespace KnxProdViewer
                         ParamBinding bind = Bindings.SingleOrDefault(b => b.TargetId == dcom.Id && b.Type == BindingTypes.ComObject);
                         if(bind != null)
                         {
-                            string source = values[bind.SourceId];
+                            string source = values[bind.SourceId].Value;
+                            //TODO check if source==x, then dont do this
                             string val = string.IsNullOrEmpty(source) ? bind.DefaultText : source;
                             dcom.Name = bind.FullText.Replace("{d}", val);
                         }
