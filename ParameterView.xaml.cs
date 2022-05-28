@@ -149,7 +149,9 @@ namespace KnxProdViewer
                         para.PropertyChanged += Para_PropertyChanged;
                         Parameters.Add(para);
 
-                        if(!values.ContainsKey(para.Id))
+                        if (para is ParamSeperator || para is ParamSeperatorBox) continue;
+
+                        if (!values.ContainsKey(para.Id))
                             values.Add(para.Id, new ParameterValues());
 
                         ((ParameterValues)values[para.Id]).Parameters.Add(para);
@@ -163,9 +165,9 @@ namespace KnxProdViewer
 
         private async void Para_PropertyChanged(object sender, PropertyChangedEventArgs e = null)
         {
-            if (e != null && e.PropertyName != "Value") return;
+            if (e != null && e.PropertyName != "Value" && e.PropertyName != "ParamVisibility") return;
 
-            IDynParameter para = sender as IDynParameter;
+            IDynParameter para = (IDynParameter)sender;
 
             /*string oldValue = values[para.Id].Value;
             if(para.Value == oldValue)
@@ -173,39 +175,49 @@ namespace KnxProdViewer
                 System.Diagnostics.Debug.WriteLine("Wert unverändert! " + para.Id + " -> " + para.Value);
                 return;
             }*/
-            System.Diagnostics.Debug.WriteLine("Wert geändert! " + para.Id + " -> " + para.Value);
 
-            IEnumerable<ParamBinding> list = Bindings.Where(b => b.SourceId == para.Id);
-            foreach(ParamBinding bind in list)
+            if(e.PropertyName == "Value")
             {
-                switch(bind.Type)
+                System.Diagnostics.Debug.WriteLine("Wert geändert! " + para.Id + " -> " + para.Value);
+
+                IEnumerable<ParamBinding> list = Bindings.Where(b => b.SourceId == para.Id);
+                foreach (ParamBinding bind in list)
                 {
-                    case BindingTypes.ComObject:
-                        DeviceComObject com = ComObjects.SingleOrDefault(c => c.Id == bind.TargetId);
-                        if(com != null)
-                        {
-                            string val = string.IsNullOrEmpty(para.Value) ? bind.DefaultText : para.Value;
-                            com.Name = bind.FullText.Replace("{d}", val);
-                        }
-                        break;
-
-                    case BindingTypes.ParameterBlock:
-                        foreach (IDynChannel ch2 in Channels)
-                        {
-                            if (ch2.Blocks.Any(b => b.Id == bind.TargetId))
+                    switch (bind.Type)
+                    {
+                        case BindingTypes.ComObject:
+                            DeviceComObject com = ComObjects.SingleOrDefault(c => c.Id == bind.TargetId);
+                            if (com != null)
                             {
-                                ParameterBlock bl = ch2.Blocks.Single(b => b.Id == bind.TargetId);
-                                if (string.IsNullOrEmpty(para.Value) || string.IsNullOrWhiteSpace(para.Value))
-                                    bl.Text = bind.FullText.Replace("{d}", bind.DefaultText);
-                                else
-                                    bl.Text = bind.FullText.Replace("{d}", para.Value);
+                                //TODO check textbinding if textbox is not visible
+                                string val = string.IsNullOrEmpty(para.Value) ? bind.DefaultText : para.Value;
+                                com.Name = bind.FullText.Replace("{d}", val);
                             }
-                        }
-                        break;
+                            break;
 
-                    default:
-                        throw new NotImplementedException(bind.Type.ToString());
+                        case BindingTypes.ParameterBlock:
+                            foreach (IDynChannel ch2 in Channels)
+                            {
+                                if (ch2.Blocks.Any(b => b.Id == bind.TargetId))
+                                {
+                                    ParameterBlock bl = ch2.Blocks.Single(b => b.Id == bind.TargetId);
+                                    if (string.IsNullOrEmpty(para.Value) || string.IsNullOrWhiteSpace(para.Value))
+                                        bl.Text = bind.FullText.Replace("{d}", bind.DefaultText);
+                                    else
+                                        bl.Text = bind.FullText.Replace("{d}", para.Value);
+                                }
+                            }
+                            break;
+
+                        default:
+                            throw new NotImplementedException(bind.Type.ToString());
+                    }
                 }
+            }
+            
+            if(e.PropertyName == "ParamVisibility")
+            {
+                System.Diagnostics.Debug.WriteLine($"Parameter {para.Id} hat sichtabrkeit geändert: {para.IsVisible}");
             }
 
             CalculateVisibilityParas(para);

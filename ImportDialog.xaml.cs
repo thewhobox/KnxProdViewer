@@ -79,7 +79,7 @@ namespace KnxProdViewer
                 });
             } catch(Exception ex)
             {
-
+                Debug.WriteLine(ex.ToString());
             }
             Debug.WriteLine("Fertig");
         }
