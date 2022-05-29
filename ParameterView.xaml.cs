@@ -36,7 +36,8 @@ namespace KnxProdViewer
         private ApplicationViewModel _app;
         private Dictionary<int, IValues> values = new Dictionary<int, IValues>();
         private List<IDynParameter> Parameters = new List<IDynParameter>();
-        private List<ParamBinding> Bindings = new List<ParamBinding>();
+        private List<AssignParameter> Assignments;
+        private List<ParamBinding> Bindings;
         private List<ComBinding> _comBindings;
         private List<AppComObject> _comObjects;
 
@@ -101,7 +102,7 @@ namespace KnxProdViewer
             }
             
             Bindings = FunctionHelper.ByteArrayToObject<List<ParamBinding>>(adds.Bindings, true);
-            //Assignments = FunctionHelper.ByteArrayToObject<List<AssignParameter>>(adds.Assignments, true);
+            Assignments = FunctionHelper.ByteArrayToObject<List<AssignParameter>>(adds.Assignments, true);
 
 
 
@@ -132,14 +133,6 @@ namespace KnxProdViewer
                 }
             }
 
-            /*using(CatalogContext co = new CatalogContext())
-            {
-                foreach (AppParameter para in co.AppParameters.Where(p => p.ApplicationId == adds.ApplicationId))
-                {
-                    values.Add(para.ParameterId, para.Value);
-                }
-            }*/
-
             foreach(IDynChannel ch in Channels)
             {
                 foreach(ParameterBlock block in ch.Blocks)
@@ -156,6 +149,18 @@ namespace KnxProdViewer
 
                         ((ParameterValues)values[para.Id]).Parameters.Add(para);
                     }
+                }
+            }
+
+            foreach(AssignParameter assign in Assignments)
+            {
+                ParameterValues val = (ParameterValues)values[assign.Target];
+                if (FunctionHelper.CheckConditions(assign.Conditions, values))
+                    val.Assignment = assign;
+                else
+                {
+                    if (val.Assignment == assign)
+                        val.Assignment = null;
                 }
             }
 
