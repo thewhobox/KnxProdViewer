@@ -44,7 +44,7 @@ namespace KnxProdViewer
             Devices.Clear();
             using(CatalogContext context = new CatalogContext())
             {
-                context.Database.Migrate();
+                //context.Database.Migrate();
                 foreach(DeviceViewModel model in context.Devices)
                 {
                     DeviceModel dmod = new DeviceModel();

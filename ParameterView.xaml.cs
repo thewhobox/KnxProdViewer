@@ -168,6 +168,11 @@ namespace KnxProdViewer
             Changed("Channels");
         }
 
+        private void lostFocus(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("LostFocus");
+        }
+
         private async void Para_PropertyChanged(object sender, PropertyChangedEventArgs e = null)
         {
             if (e != null && e.PropertyName != "Value" && e.PropertyName != "ParamVisibility") return;
