@@ -155,12 +155,22 @@ namespace KnxProdViewer
                             values.Add(para.Id, new ParameterValues());
 
                         ((ParameterValues)values[para.Id]).Parameters.Add(para);
+
+                        if(para is ParamPicture pc)
+                        {
+                            pc.OnPictureRequest += Pc_OnPictureRequest;
+                        }
                     }
                 }
             }
 
             Changed("ComObjects");
             Changed("Channels");
+        }
+
+        private object Pc_OnPictureRequest(string BaggageId)
+        {
+            throw new NotImplementedException();
         }
 
         private async void Para_PropertyChanged(object sender, PropertyChangedEventArgs e = null)
