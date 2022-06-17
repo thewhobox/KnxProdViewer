@@ -72,7 +72,7 @@ namespace KnxProdViewer
             context.Database.Migrate();
             List<ImportDevice> toImport = new List<ImportDevice>();
             foreach(object x in DeviceList.SelectedItems)
-                toImport.Add(x as ImportDevice);
+                toImport.Add((ImportDevice)x);
             try{
                 await System.Threading.Tasks.Task.Run(async () => {
                     Manager.StartImport(toImport, context);

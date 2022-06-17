@@ -23,6 +23,7 @@ namespace KnxProdViewer.Selectors
         public DataTemplate SeperatorBox { get; set; }
         public DataTemplate Time { get; set; }
         public DataTemplate Table { get; set; }
+        public DataTemplate Slider { get; set; }
         public DataTemplate Picture { get; set; }
         public DataTemplate None { get; set; }
 
@@ -63,8 +64,8 @@ namespace KnxProdViewer.Selectors
                 case ParameterTable ptable:
                     return NotFound;
 
-                case ParamPicture ppicture:
-                    return Picture;
+                case ParamSlider psl:
+                    return Slider;
 
                 case ParamNone pnon:
                     return None;

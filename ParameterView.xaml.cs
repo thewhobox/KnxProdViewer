@@ -36,7 +36,8 @@ namespace KnxProdViewer
         private ApplicationViewModel _app;
         private Dictionary<int, IValues> values = new Dictionary<int, IValues>();
         private List<IDynParameter> Parameters = new List<IDynParameter>();
-        private List<ParamBinding> Bindings = new List<ParamBinding>();
+        private List<AssignParameter> Assignments;
+        private List<ParamBinding> Bindings;
         private List<ComBinding> _comBindings;
         private List<AppComObject> _comObjects;
 
@@ -101,7 +102,7 @@ namespace KnxProdViewer
             }
             
             Bindings = FunctionHelper.ByteArrayToObject<List<ParamBinding>>(adds.Bindings, true);
-            //Assignments = FunctionHelper.ByteArrayToObject<List<AssignParameter>>(adds.Assignments, true);
+            Assignments = FunctionHelper.ByteArrayToObject<List<AssignParameter>>(adds.Assignments, true);
 
 
 
@@ -132,14 +133,6 @@ namespace KnxProdViewer
                 }
             }
 
-            /*using(CatalogContext co = new CatalogContext())
-            {
-                foreach (AppParameter para in co.AppParameters.Where(p => p.ApplicationId == adds.ApplicationId))
-                {
-                    values.Add(para.ParameterId, para.Value);
-                }
-            }*/
-
             foreach(IDynChannel ch in Channels)
             {
                 foreach(ParameterBlock block in ch.Blocks)
@@ -155,12 +148,23 @@ namespace KnxProdViewer
                             values.Add(para.Id, new ParameterValues());
 
                         ((ParameterValues)values[para.Id]).Parameters.Add(para);
-
-                        if(para is ParamPicture pc)
+                        if (para is ParamPicture pc)
                         {
                             pc.OnPictureRequest += Pc_OnPictureRequest;
                         }
                     }
+                }
+            }
+
+            foreach(AssignParameter assign in Assignments)
+            {
+                ParameterValues val = (ParameterValues)values[assign.Target];
+                if (FunctionHelper.CheckConditions(assign.Conditions, values))
+                    val.Assignment = assign;
+                else
+                {
+                    if (val.Assignment == assign)
+                        val.Assignment = null;
                 }
             }
 
@@ -171,6 +175,11 @@ namespace KnxProdViewer
         private object Pc_OnPictureRequest(string BaggageId)
         {
             throw new NotImplementedException();
+        }
+
+        private void lostFocus(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("LostFocus");
         }
 
         private async void Para_PropertyChanged(object sender, PropertyChangedEventArgs e = null)

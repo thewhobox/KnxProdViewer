@@ -200,10 +200,5 @@ namespace KnxProdViewer.Controls
             if(success)
                 Value = outx;
         }
-
-        private void failed(object sender, ExceptionRoutedEventArgs e)
-        {
-
-        }
     }
 }
